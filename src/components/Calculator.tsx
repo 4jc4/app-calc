@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCalculator } from '@/contexts/CalculatorContext'
 import { Button } from './Button'
 import { CalculatorDisplay } from './CalculatorDisplay'
 import { Card } from './Card'
@@ -43,41 +43,10 @@ const buttons: ButtonConfig[][] = [
 ]
 
 export function Calculator() {
-  const [operation, setOperation] = useState('')
-  const [result, setResult] = useState('')
+  const { operation, result, doOperation } = useCalculator()
 
   function handleInputClick(input: string) {
-    if (input === 'C') {
-      setOperation('')
-      setResult('')
-      return
-    }
-
-    if (input === 'CE') {
-      setResult('')
-      setOperation(operation.slice(0, -1))
-      return
-    }
-
-    if (input === '=') {
-      const operationResult = eval(operation.replace(/,/g, '.'))
-      const parsedResult = operationResult.toString()?.replace(/\./g, ',')
-      setResult(parsedResult)
-      return
-    }
-
-    if (result) {
-      setOperation(isNaN(input) ? `${result}${input}` : input)
-      setResult('')
-      return
-    }
-
-    if (input === ',' && !operation.endsWith(',')) {
-      setOperation(`${operation},`)
-      return
-    }
-
-    setOperation(`${operation}${input}`)
+    doOperation(input)
   }
 
   return (
